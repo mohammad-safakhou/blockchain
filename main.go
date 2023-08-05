@@ -86,21 +86,41 @@ func main() {
 	// Concatenate the header fields
 	blockHeader := previousBlockHash + merkleRoot + timestamp + targetDifficulty
 
-	// Mining loop
-	for { // 2
-		// Generate a random 32-bit integer (nonce)
-		nonce, err := rand.Int(rand.Reader, big.NewInt(4294967296))
-		if err != nil {
-			panic(err)
-		}
-		blockHash := calculateBlockHash(blockHeader, nonce.Uint64())
-		if blockHash[:len(targetDifficulty)] == targetDifficulty {
-			// Nonce found! Block hash meets the difficulty requirement.
-			fmt.Printf("Block Hash: %s\n", blockHash)
-			fmt.Printf("Nonce: %d\n", nonce)
-			break
-		}
+	const numMiners = 100
+	winner := make(chan int)
+	var c = make([]int, numMiners)
+	for i := 0; i < numMiners; i++ {
+		go func(ii int) {
+			// Mining loop
+			for { // 2
+				c[ii]++
+				// Generate a random 32-bit integer (nonce)
+				nonce, err := rand.Int(rand.Reader, big.NewInt(4294967296))
+				if err != nil {
+					panic(err)
+				}
+				blockHash := calculateBlockHash(blockHeader, nonce.Uint64())
+				if blockHash[:len(targetDifficulty)] == targetDifficulty {
+					// Nonce found! Block hash meets the difficulty requirement.
+					fmt.Printf("Block Hash: %s\n", blockHash)
+					fmt.Printf("Nonce: %d\n", nonce)
+					winner <- ii
+					break
+				}
+			}
+		}(i)
 	}
+
+	winnerNumber := <-winner
+	t := 0
+	for i := 0; i < numMiners; i++ {
+		fmt.Printf("miner %d: %d attempts\n", i, c[i])
+		t += c[i]
+	}
+	fmt.Printf("miner %d won\n", winnerNumber)
+	fmt.Printf("total attempts: %d\n", t)
+
+	//fmt.Printf("nonce found after %d attempts\n", c)
 
 	fmt.Printf("process time took: %dms\n", time.Now().Sub(start).Milliseconds())
 }
