@@ -1,10 +1,12 @@
 package block
 
+// Block is a struct that represents a block in the blockchain.
 type Block struct {
 	header       Header
 	transactions []Transaction
 }
 
+// Header is a struct that represents a header of block in the blockchain.
 type Header struct {
 	Hash          string `json:"hash"`
 	PrevHash      string `json:"prev_hash"`
