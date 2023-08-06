@@ -1,4 +1,4 @@
-package genesis
+package db
 
 type Genesis struct {
 	Hash     string `json:"hash"`
