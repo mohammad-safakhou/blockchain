@@ -13,7 +13,7 @@ func (t *Transactions) MerkleRoot() string {
 	// Create a slice of strings to store the transaction hashes
 	var transactionHashes []string
 
-	// Iterate over the transactions and add the transaction hashes to the slice
+	// Iterate over the Transactions and add the transaction hashes to the slice
 	for _, transaction := range *t {
 		transactionHashes = append(transactionHashes, transaction.Hash())
 	}
@@ -27,8 +27,8 @@ type Transaction struct {
 	Input       account.Address `json:"input"`
 	Output      account.Address `json:"output"`
 	Description string          `json:"description"`
-	Amount      int             `json:"amount"`
-	Fee         int             `json:"fee"`
+	Amount      float64         `json:"amount"`
+	Fee         float64         `json:"fee"`
 }
 
 func (t *Transaction) Validate() bool {

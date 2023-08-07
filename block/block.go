@@ -7,35 +7,38 @@ import (
 
 // Block is a struct that represents a block in the blockchain.
 type Block struct {
-	header       Header
-	transactions []Transaction
+	Header       Header
+	Transactions []Transaction
 }
 
 // Hash returns the hash of the block.
 func (b *Block) Hash() string {
-	// Combine the block header and nonce
-	data := b.header.Nonce + b.header.Hash + b.header.PrevHash + b.header.Data + b.header.MerkleRoot
+	// Combine the block Header and nonce
+	data := b.Header.Nonce + b.Header.Hash + b.Header.PrevHash + b.Header.Data + b.Header.MerkleRoot
 
 	return utils.DoubleHash(data)
 }
 
 func NewBlock(header Header, transactions []Transaction) Block {
 	return Block{
-		header:       header,
-		transactions: transactions,
+		Header:       header,
+		Transactions: transactions,
 	}
 }
 
-// Header is a struct that represents a header of block in the blockchain.
+// Header is a struct that represents a Header of block in the blockchain.
 type Header struct {
 	Hash          string   `json:"hash"`
 	PrevHash      string   `json:"prev_hash"`
+	Timestamp     int64    `json:"timestamp"`
+	Size          int      `json:"size"`
 	Data          string   `json:"data"`
 	Nonce         string   `json:"nonce"`
 	MerkleRoot    string   `json:"merkle_root"`
 	Height        *big.Int `json:"height"`
 	Confirmations *big.Int `json:"confirmations"`
 	Difficulty    *big.Int `json:"difficulty"`
+	Bits          string   `json:"bits"`
 	Reward        *big.Int `json:"reward"`
 	FeeReward     *big.Int `json:"fee_reward"`
 }
