@@ -1,8 +1,7 @@
 package block
 
 import (
-	"crypto/sha256"
-	"fmt"
+	"github.com/mohammad-safakhou/blockchain/utils"
 	"math/big"
 )
 
@@ -17,14 +16,7 @@ func (b *Block) Hash() string {
 	// Combine the block header and nonce
 	data := b.header.Nonce + b.header.Hash + b.header.PrevHash + b.header.Data + b.header.MerkleRoot
 
-	// Calculate the double SHA256 hash of the combined data
-	hash := sha256.Sum256([]byte(data))
-	hash = sha256.Sum256(hash[:])
-
-	// Convert the hash to a hexadecimal string
-	blockHash := fmt.Sprintf("%x", hash)
-
-	return blockHash
+	return utils.DoubleHash(data)
 }
 
 func NewBlock(header Header, transactions []Transaction) Block {
